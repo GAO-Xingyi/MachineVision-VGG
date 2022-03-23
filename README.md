@@ -18,7 +18,7 @@
 https://github.com/tensorflow/models/tree/master/research/slim
 
 ### 迁移学习步骤
-![img.png](picture/img.png)
+
 1. 建立自己的网络，在预训练模型基础上，修改最后输出结构，并加载与训练模型的模型参数
 2. 根据数据大小调整
    - 如果待训练模型数据量小，那么我们可以选择将预训练模型的所有的层进行freeze(可以通过Tensorflow的trainable=False参数实现)，而剩下的输出层部分可以选择调整参数训练。
