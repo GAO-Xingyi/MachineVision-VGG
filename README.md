@@ -1,5 +1,5 @@
-# Machine Vision based VGG
-机器视觉基于VGG迁移学习
+# Machine Vision based CNN
+机器视觉基于CNN卷积神经网络
 ## 迁移学习
 **迁移学习：** 利用数据、任务和模型间的相识性，将旧的领域学习过或训练好的模型，应用于新的领域这样的一个过程。
 > 注意：这两个任务的输入属于同一性质：都是图像或者都是语音或者都是其他别的。
@@ -56,7 +56,8 @@ https://github.com/tensorflow/models/tree/master/research/slim
     - shuffle=True)
       - 从本地读取
       - 该api要求数据存储格式固定
-```data/
+```
+data/
     train/
         dogs/
             dog001.jpg
@@ -75,4 +76,6 @@ https://github.com/tensorflow/models/tree/master/research/slim
             cat001.jpg
             cat002.jpg
             ...
-            ```
+```
+
+> 注意这里在进行数据增强后，在训练的时候也要将增强数据放进去，该使用fit_generator()，而不是fit()
