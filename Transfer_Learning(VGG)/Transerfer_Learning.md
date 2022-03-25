@@ -82,7 +82,8 @@ data/
 
 > 注意这里在进行数据增强后，在训练的时候也要将增强数据放进去，该使用fit_generator()，而不是fit()
 
-## VGG-notop模型
+## 修改模型分类层
+### VGG-notop模型
 在运行完代码后
 在根目录下有一个```.keras```，其中的```models```文件夹中就生成一个VGG的notop模型
 ![img.png](picture/img.png)
@@ -136,9 +137,26 @@ VGG16源码片
 ```
 下面是VGG16（imgenet）模型报告
 ![img.png](picture/img2.png)
-## 全局平均池化(GobalAveragePooling2D)
+### 全局平均池化(GobalAveragePooling2D)
 在进行迁移学习中，仅需要去训练后面的全连接层，所以不需要大量的参数，使用过多参数会导致过拟合。
 例如：输出大少为shape=[8,8,2048],通过全局平均池化后，将8*8的64位向量进行取均值，所以原本的8*8*2048就转变成了1*2048
+![](picture/pooling.png)
+
+## 冻结预训练模型
+如果我们模型的测试集大，就可以将模型的所有参数拿出来一起训练；
+如果我们模型的测试集小，就将模型前面层冻结，只训练全连接层的参数
+
+在进行冻结模型之前，我们需要知道几个API：
+- 保存模型
+```java
+model.save_weights("./xxx.h5")
+```
+- 加载模型
+```java
+model.load_weights("./xxx.h5")
+```
+
+
 
 
 
