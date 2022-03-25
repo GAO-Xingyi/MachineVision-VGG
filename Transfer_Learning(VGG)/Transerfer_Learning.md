@@ -90,7 +90,7 @@ data/
 - notop模型不包含最后三个全连接层，专门用来fine-tuning，不需要我们来自主进行删除
 
 VGG16源码片
-```java
+```python
  if include_top:
     # Classification block
     x = layers.Flatten(name='flatten')(x)
@@ -146,15 +146,61 @@ VGG16源码片
 如果我们模型的测试集大，就可以将模型的所有参数拿出来一起训练；
 如果我们模型的测试集小，就将模型前面层冻结，只训练全连接层的参数
 
-在进行冻结模型之前，我们需要知道几个API：
+**做法：** 将要冻结的每层中的trainable参数设置为`False`
+```python
+layer.trainable = False  
+```
+
+```python
+# 将基类模型中的每一层进行冻结
+for layer in self.base_model.layer:
+    layer.trainable = False
+```
+
+## 训练模型
+- 编译模型
+  - 优化器：Adam
+    - optimizer=keras.optimizers.Adam()
+  - loss损失计算：交叉熵损失
+    - loss=keras.losses.sparse_categorical_crossentropy
+  - 评估矩阵
+    - metrics=['accuracy']
+
+- 训练模型
+  - 数据增强过，需要使用fit_generator()
+    - 在fit_generator()的callbacks中可以加入ModelCheckpoint进行记录每次迭代的准确率，fit()是加不进去这个monitor的
+    - 在新版本的tensorflow中fit_generator()已经被弃用了，fit()合并了fit_generator()的作用
+
+### ModelCheckpoint
+- 这里检测验证准确率“val_acc”(注意在新版本中，这里可能要改成“val_accuracy”)
+- 只保留权重参数
+- 只保留最好的模型
+- 自动检测最大准确率与最小的loss
+
+```python
+modelckpt = keras.callbacks.ModelCheckpoint('./ckpt/transfer_{epoch:02d}-{val_acc:.2f}.h5',
+                                                     monitor='val_acc',
+                                                     save_weights_only=True,
+                                                     save_best_only=True,
+                                                     mode='auto',
+                                                     period=1)
+```
+
+## 输入数据进行预测
+再训练完模型后需要保存模型，并在之后加载模型使用
 - 保存模型
-```java
+```python
 model.save_weights("./xxx.h5")
 ```
 - 加载模型
-```java
+```python
 model.load_weights("./xxx.h5")
 ```
+
+
+    
+
+
 
 
 
